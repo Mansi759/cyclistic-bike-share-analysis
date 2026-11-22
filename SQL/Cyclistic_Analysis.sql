@@ -42,3 +42,136 @@ SET day = CASE
     WHEN day_of_week = 6 THEN 'Friday'
     WHEN day_of_week = 7 THEN 'Saturday'
 END;
+
+-- ============================================================
+-- 2. DESCRIPTIVE ANALYSIS
+-- ============================================================
+
+
+-- 2.1 Average Ride Length
+-- Calculates the average duration of all rides.
+
+SELECT
+    SEC_TO_TIME(AVG(TIME_TO_SEC(ride_length))) AS avg_ride_length
+FROM bike_trip_copy;
+
+
+-- 2.2 Maximum Ride Length
+-- Identifies the longest ride duration.
+
+SELECT
+    MAX(ride_length) AS max_ride_length
+FROM bike_trip_copy;
+
+
+-- 2.3 Minimum Ride Length
+-- Identifies the shortest ride duration.
+
+SELECT
+    MIN(ride_length) AS min_ride_length
+FROM bike_trip_copy;
+
+
+-- 2.4 Total Number of Rides
+-- Counts all recorded rides.
+
+SELECT
+    COUNT(ride_id) AS total_rides
+FROM bike_trip_copy;
+
+
+-- 2.5 Ride Count by Rider Type
+-- Compares the total rides taken by Members and Casual riders.
+
+SELECT
+    member_casual,
+    COUNT(ride_id) AS total_rides
+FROM bike_trip_copy
+GROUP BY member_casual;
+
+
+-- 2.6 Ride Count and Average Ride Length by Rider Type
+-- Compares ride volume and average duration between rider types.
+
+SELECT
+    member_casual,
+    COUNT(ride_id) AS total_rides,
+    SEC_TO_TIME(AVG(TIME_TO_SEC(ride_length))) AS avg_ride_length
+FROM bike_trip_copy
+GROUP BY member_casual;
+
+
+-- 2.7 Ride Count by Bike Type
+-- Identifies the usage of each bike type.
+
+SELECT
+    rideable_type,
+    COUNT(ride_id) AS total_rides
+FROM bike_trip_copy
+GROUP BY rideable_type;
+
+
+-- 2.8 Ride Count by Day
+-- Counts rides for each day of the week.
+
+SELECT
+    day,
+    COUNT(ride_id) AS total_rides
+FROM bike_trip_copy
+GROUP BY day;
+
+
+-- 2.9 Ride Count by Day and Rider Type
+-- Compares weekday ride counts between Members and Casual riders.
+
+SELECT
+    day,
+    member_casual,
+    COUNT(ride_id) AS rider_count
+FROM bike_trip_copy
+GROUP BY day, member_casual;
+
+
+-- 2.10 Average Ride Length by Day
+-- Calculates average ride duration for each day of the week.
+
+SELECT
+    day,
+    SEC_TO_TIME(AVG(TIME_TO_SEC(ride_length))) AS avg_ride_length
+FROM bike_trip_copy
+GROUP BY day;
+
+
+-- 2.11 Average Ride Length by Day and Rider Type
+-- Compares average daily ride durations between Members and Casual riders.
+
+SELECT
+    day,
+    member_casual,
+    SEC_TO_TIME(AVG(TIME_TO_SEC(ride_length))) AS avg_ride_length
+FROM bike_trip_copy
+GROUP BY day, member_casual;
+
+
+-- 2.12 Monthly Ride Distribution by Rider Type
+-- Analyzes monthly ride volume for Members and Casual riders.
+
+SELECT
+    MONTH(started_at) AS month,
+    member_casual,
+    COUNT(ride_id) AS total_rides
+FROM bike_trip_copy
+GROUP BY MONTH(started_at), member_casual
+ORDER BY month, member_casual;
+
+
+-- 2.13 Hourly Ride Distribution by Rider Type
+-- Identifies hourly ride patterns for Members and Casual riders.
+
+SELECT
+    HOUR(started_at) AS ride_hour,
+    member_casual,
+    COUNT(ride_id) AS ride_count
+FROM bike_trip_copy
+GROUP BY ride_hour, member_casual
+ORDER BY ride_hour;
