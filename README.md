@@ -46,9 +46,9 @@ Cyclistic aims to increase annual memberships by understanding the behavioral di
 
 Detailed documentation covering the different stages of the analysis:
 
-- [Process](Documentation/01_Process.md)
-- [Analyze](Documentation/02_Analyze.md)
-- [Insights & Recommendations](Documentation/03_Insights_and_Recommendations.md)
+- [Process](Documentation/Process.docx)
+- [Analyze](Documentation/Analyze.docx)
+- [Insights & Recommendations](Documentation/Insights_and_Recommendation.docx)
 
 ## Power BI Dashboard
 
