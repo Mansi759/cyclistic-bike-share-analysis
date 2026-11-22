@@ -175,3 +175,142 @@ SELECT
 FROM bike_trip_copy
 GROUP BY ride_hour, member_casual
 ORDER BY ride_hour;
+
+-- ============================================================
+-- 3. VIEWS
+-- ============================================================
+
+-- 3.1 Average Ride Length
+
+CREATE OR REPLACE VIEW avg_ride_length AS
+SELECT
+    SEC_TO_TIME(AVG(TIME_TO_SEC(ride_length))) AS ride_duration
+FROM bike_trip_copy;
+
+
+-- 3.2 Average Ride Length by Rider Type
+
+CREATE OR REPLACE VIEW avg_ride_length_per_member_casual AS
+SELECT
+    member_casual,
+    SEC_TO_TIME(AVG(TIME_TO_SEC(ride_length))) AS avg_ride_length
+FROM bike_trip_copy
+GROUP BY member_casual;
+
+
+-- 3.3 Average Ride Length by Day and Rider Type
+
+CREATE OR REPLACE VIEW avg_ride_length_per_day_and_member_casual AS
+SELECT
+    day,
+    member_casual,
+    SEC_TO_TIME(AVG(TIME_TO_SEC(ride_length))) AS avg_ride_length
+FROM bike_trip_copy
+GROUP BY day, member_casual;
+
+
+-- 3.4 Bike Type Preference by Rider Type
+
+CREATE OR REPLACE VIEW bike_type_preference AS
+SELECT
+    rideable_type,
+    member_casual,
+    COUNT(ride_id) AS rider_count
+FROM bike_trip_copy
+GROUP BY rideable_type, member_casual;
+
+
+-- 3.5 Ride Count by Bike Type
+
+CREATE OR REPLACE VIEW favourable_bike AS
+SELECT
+    rideable_type,
+    COUNT(ride_id) AS rider_count
+FROM bike_trip_copy
+GROUP BY rideable_type;
+
+
+-- 3.6 Hourly Ride Distribution
+
+CREATE OR REPLACE VIEW hourly_ride_distribution AS
+SELECT
+    HOUR(started_at) AS ride_hour,
+    member_casual,
+    COUNT(ride_id) AS ride_count
+FROM bike_trip_copy
+GROUP BY ride_hour, member_casual;
+
+
+-- 3.7 Maximum Ride Length
+
+CREATE OR REPLACE VIEW max_ride_length AS
+SELECT
+    SEC_TO_TIME(MAX(TIME_TO_SEC(ride_length))) AS ride_duration
+FROM bike_trip_copy;
+
+
+-- 3.8 Most Frequent Riding Day
+
+CREATE OR REPLACE VIEW mode AS
+SELECT
+    day,
+    COUNT(ride_id) AS rider_frequency
+FROM bike_trip_copy
+GROUP BY day;
+
+
+-- 3.9 Monthly Ride Trend
+
+CREATE OR REPLACE VIEW monthly_ride_trend AS
+SELECT
+    MONTH(started_at) AS month,
+    member_casual,
+    COUNT(ride_id) AS ride_count
+FROM bike_trip_copy
+GROUP BY month, member_casual;
+
+
+-- 3.10 Popular Ending Stations
+
+CREATE OR REPLACE VIEW popular_end_stations AS
+SELECT
+    end_station_name,
+    member_casual,
+    COUNT(ride_id) AS ride_count
+FROM bike_trip_copy
+GROUP BY end_station_name, member_casual;
+
+
+-- 3.11 Popular Starting Stations
+
+CREATE OR REPLACE VIEW popular_start_stations AS
+SELECT
+    start_station_name,
+    member_casual,
+    COUNT(ride_id) AS ride_count
+FROM bike_trip_copy
+GROUP BY start_station_name, member_casual;
+
+
+-- 3.12 Ride Count per Day
+
+CREATE OR REPLACE VIEW rider_count_per_day AS
+SELECT
+    day,
+    COUNT(ride_id) AS rider_count
+FROM bike_trip_copy
+GROUP BY day;
+
+
+-- 3.13 Rider Type Distribution
+
+CREATE OR REPLACE VIEW rider_type_distribution AS
+SELECT
+    member_casual,
+    COUNT(ride_id) AS rider_count,
+    ROUND(
+        COUNT(ride_id) * 100.0 / (SELECT COUNT(ride_id) FROM bike_trip_copy),
+        2
+    ) AS ride_percentage
+FROM bike_trip_copy
+GROUP BY member_casual;
